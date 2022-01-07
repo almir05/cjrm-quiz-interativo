@@ -13,6 +13,7 @@ const checkResult = event => {
   event.preventDefault()
   
   let score = 0
+  
   const userAnswers = [
     form.inputQuestion1.value,
     form.inputQuestion2.value,
@@ -20,7 +21,7 @@ const checkResult = event => {
     form.inputQuestion4.value,
     form.inputQuestion5.value
   ]
-
+  
   const userScore = (userAnswer, index) => {
     if (userAnswer === correctAnswers[index]) {
       score += 20
@@ -29,7 +30,9 @@ const checkResult = event => {
   
   userAnswers.forEach(userScore)
   
-  if (score > 0) {
+  const scoreBiggerThanZero = score > 0
+  
+  if (scoreBiggerThanZero) {
     insertResultMessage(score, 'text-success')
     return
   }
