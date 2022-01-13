@@ -1,15 +1,19 @@
 const form = document.querySelector('form')
-const button = document.querySelector('button')
-const correctAnswers = ['A', 'B', 'B', 'C', 'A']
-const h1 = document.createElement('h1')
+const calculateUserScoreDiv = document.querySelector('.text-center')
+const correctAnswers = ['A', 'B', 'D', 'D', 'B', 'C', 'A', 'C', 'B', 'A']
+const scoreMessage = document.createElement('h1')
 
-const insertResultMessage = (score, textColor) => {
-  h1.textContent = `Você acertou ${score}% das questões!`
-  h1.setAttribute('class', textColor)
-  button.insertAdjacentElement('afterend', h1)
+const insertScoreMessage = (counter, textColor) => {
+  scoreMessage.textContent = `Você acertou ${counter}% das questões!`
+  scoreMessage.setAttribute('class', textColor)
+  calculateUserScoreDiv.appendChild(scoreMessage)
 }
 
-const checkResult = event => {
+const getTextColor = score => ({
+  0: 'text-danger'
+})[score] || 'text-success'
+
+const showScore = event => {
   event.preventDefault()
   
   let score = 0
@@ -19,25 +23,36 @@ const checkResult = event => {
     form.inputQuestion2.value,
     form.inputQuestion3.value,
     form.inputQuestion4.value,
-    form.inputQuestion5.value
+    form.inputQuestion5.value,
+    form.inputQuestion6.value,
+    form.inputQuestion7.value,
+    form.inputQuestion8.value,
+    form.inputQuestion9.value,
+    form.inputQuestion10.value
   ]
   
-  const userScore = (userAnswer, index) => {
-    if (userAnswer === correctAnswers[index]) {
-      score += 20
+  const calculateUserScore = (userAnswer, index) => {
+   if (userAnswer === correctAnswers[index]) {
+      score += 10
     }
   }
   
-  userAnswers.forEach(userScore)
+  userAnswers.forEach(calculateUserScore)
   
-  const scoreBiggerThanZero = score > 0
+  scrollTo(0, 10)
   
-  if (scoreBiggerThanZero) {
-    insertResultMessage(score, 'text-success')
-    return
-  }
+  const textColor = getTextColor(score)
   
-  insertResultMessage(score, 'text-danger')
+  let counter = 0
+  
+  const timer = setInterval(() => {
+    if (counter === score) {
+      clearInterval(timer)
+    }
+    
+    insertScoreMessage(counter, textColor)
+    counter++
+  }, 10)
 }
 
-form.addEventListener('submit', checkResult)
+form.addEventListener('submit', showScore)
