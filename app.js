@@ -3,46 +3,49 @@ const calculateUserScoreDiv = document.querySelector('.text-center')
 const correctAnswers = ['A', 'B', 'D', 'D', 'B', 'C', 'A', 'C', 'B', 'A']
 const scoreMessage = document.createElement('h1')
 
-const insertScoreMessage = (counter, textColor) => {
-  scoreMessage.textContent = `Você acertou ${counter}% das questões!`
-  scoreMessage.setAttribute('class', textColor)
-  calculateUserScoreDiv.appendChild(scoreMessage)
+let score = 0
+
+const getUserAnswer = () => {
+  const userAnswers = []
+
+  correctAnswers.forEach((correctAnswer, index) => {
+    userAnswers.push(form[`inputQuestion${index + 1}`].value)
+  })
+
+  return userAnswers
+}
+
+const calculateUserScore = userAnswers => {
+  score = 0
+
+  userAnswers.forEach((userAnswer, index) => {
+    const isUserAnswerCorrect = userAnswer === correctAnswers[index]
+
+    if (isUserAnswerCorrect) {
+       score += 10
+     }
+   })
+}
+
+const scrollPageToScore = () => {
+  scrollTo({
+    top: 0,
+    left: 0,
+    behavior: "smooth"
+  })
 }
 
 const getTextColor = score => ({
   0: 'text-danger'
 })[score] || 'text-success'
 
-const showScore = event => {
-  event.preventDefault()
-  
-  let score = 0
-  
-  const userAnswers = [
-    form.inputQuestion1.value,
-    form.inputQuestion2.value,
-    form.inputQuestion3.value,
-    form.inputQuestion4.value,
-    form.inputQuestion5.value,
-    form.inputQuestion6.value,
-    form.inputQuestion7.value,
-    form.inputQuestion8.value,
-    form.inputQuestion9.value,
-    form.inputQuestion10.value
-  ]
-  
-  const calculateUserScore = (userAnswer, index) => {
-   if (userAnswer === correctAnswers[index]) {
-      score += 10
-    }
-  }
-  
-  userAnswers.forEach(calculateUserScore)
-  
-  scrollTo(0, 10)
-  
-  const textColor = getTextColor(score)
-  
+const insertScoreMessage = (counter, textColor) => {
+  scoreMessage.textContent = `Você acertou ${counter}% das questões!`
+  scoreMessage.setAttribute('class', textColor)
+  calculateUserScoreDiv.appendChild(scoreMessage)
+}
+
+const animateFinalScore = textColor => {
   let counter = 0
   
   const timer = setInterval(() => {
@@ -50,9 +53,22 @@ const showScore = event => {
       clearInterval(timer)
     }
     
-    insertScoreMessage(counter, textColor)
-    counter++
-  }, 10)
+    insertScoreMessage(counter++, textColor)
+    
+  }, 20)
+}
+
+const showScore = event => {
+  event.preventDefault()
+  
+  const userAnswers = getUserAnswer()
+  
+  calculateUserScore(userAnswers)  
+  scrollPageToScore()
+
+  const textColor = getTextColor(score)
+
+  animateFinalScore(textColor)
 }
 
 form.addEventListener('submit', showScore)
