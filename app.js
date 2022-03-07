@@ -5,15 +5,8 @@ const scoreMessage = document.createElement('h1')
 
 let score = 0
 
-const getUserAnswer = () => {
-  const userAnswers = []
-
-  correctAnswers.forEach((correctAnswer, index) => {
-    userAnswers.push(form[`inputQuestion${index + 1}`].value)
-  })
-
-  return userAnswers
-}
+const getUserAnswer = () => correctAnswers.map((_, index) => 
+  form[`inputQuestion${index + 1}`].value)
 
 const calculateUserScore = userAnswers => {
   score = 0
